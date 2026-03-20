@@ -1,7 +1,7 @@
 # RocoCalculator
 
 <p align="center">
-  <img src="assets/ss.png" alt="RocoCalculator title" width="420">
+  <img src="assets/ss.png" alt="RocoCalculator"
 </p>
 
 RocoCalculator is a simple tool for calculating power in RollerCoin.
