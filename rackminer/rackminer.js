@@ -385,12 +385,12 @@ const TARGET_OVER_PCT = 100;
                 <select class="m-rarity ${cls}" onchange="updateRarityColor(this); solve()">
                     ${rarityOptions(savedRarity)}
                 </select>
-                <input type="text" class="m-name ${cls}" value="${data ? data.name : ''}" placeholder="name..." oninput="solve()">
-                <input type="number" class="m-pow" value="${data ? data.pow : ''}" placeholder="0.000" oninput="solve()">
+                <input type="text" class="m-name ${cls}" value="${data ? data.name : ''}" placeholder="Name..." oninput="solve()">
+                <input type="number" class="m-pow" value="${data ? data.pow : ''}" placeholder="0.00 (Power)" oninput="solve()">
                 <select class="m-unit" onchange="solve()">
                     ${unitOptions(savedUnit)}
                 </select>
-                <input type="number" class="m-bonus" value="${data ? data.bonus : ''}" placeholder="0.00" oninput="solve()">
+                <input type="number" class="m-bonus" value="${data ? data.bonus : ''}" placeholder="0.00 (Bonus%)" oninput="solve()">
                 <button class="del-miner" onclick="requestDeleteMiner(this)">X</button>
             </div>
             <div class="lock-indicator">WARNING DUPLICATE RARITY - 0% BONUS</div>
