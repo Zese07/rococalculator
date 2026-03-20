@@ -6,7 +6,7 @@
 <title>RackMiner - RocoCalculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
-<link rel="stylesheet" href="../styles.css?v=20260320-2">
+<link rel="stylesheet" href="../styles.css?v=20260320-3">
 </head>
 <body class="rack-page">
 <div class="container">
@@ -38,9 +38,12 @@
             <span class="dash-val" id="dRack">0.000 PH/s</span>
         </div>
         <div class="total-footer">
-            <span class="label-head">ESTIMATED TOTAL</span>
+            <div class="total-label-row">
+                <span class="label-head">ESTIMATED TOTAL</span>
+                <button class="caution-trigger" type="button" onclick="openCautionModal()" aria-label="Open caution notice">!</button>
+            </div>
             <span class="total-big" id="dTotal">0.000 PH/s</span>
-            <span class="total-note">* Note: Proceed with caution.<br>Actual in-game value may vary slightly compare to the estimated value.<br></span>
+            <span class="total-note">Note: Proceed with caution.<br>Actual in-game value may vary slightly compare to the estimated value.<br></span>
             <div class="target-wrap">
                 <label class="target-label" for="targetPowerValue">MAX POWER TARGET</label>
                 <div class="target-input-row">
@@ -75,8 +78,8 @@
             </div>
             <p class="confirm-message" id="deleteConfirmMessage">This action cannot be undone.</p>
             <div class="confirm-actions">
-                <button id="deleteConfirmCancel" class="confirm-btn confirm-cancel" type="button">CANCEL</button>
                 <button id="deleteConfirmConfirm" class="confirm-btn confirm-delete" type="button">DELETE</button>
+                <button id="deleteConfirmCancel" class="confirm-btn confirm-cancel" type="button">CANCEL</button>
             </div>
         </div>
     </div>
@@ -98,6 +101,18 @@
         </div>
     </div>
 
+    <div id="cautionOverlay" class="confirm-overlay" aria-hidden="true">
+        <div class="confirm-modal caution-modal" role="dialog" aria-modal="true" aria-labelledby="cautionModalTitle">
+            <div class="confirm-head">
+                <span class="confirm-title" id="cautionModalTitle">CAUTION NOTICE</span>
+            </div>
+            <img class="caution-image" src="../assets/caution.png" alt="Caution notice image">
+            <div class="confirm-actions">
+                <button id="cautionModalClose" class="confirm-btn caution-close" type="button">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
         <span>CREATED BY ZESE07</span>
         <span class="footer-separator">|</span>
@@ -108,6 +123,6 @@
     </div>
 
 </div>
-<script src="./rackminer.js?v=20260320-2"></script>
+<script src="./rackminer.js?v=20260320-3"></script>
 </body>
 </html>

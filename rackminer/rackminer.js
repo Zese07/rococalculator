@@ -217,6 +217,46 @@ const TARGET_OVER_PCT = 100;
         });
     }
 
+    function openCautionModal() {
+        const overlay = document.getElementById('cautionOverlay');
+        const closeBtn = document.getElementById('cautionModalClose');
+        if (!overlay) return;
+        applyOverlayFallback(overlay);
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.style.display = 'flex';
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closeCautionModal() {
+        const overlay = document.getElementById('cautionOverlay');
+        if (!overlay) return;
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.style.display = 'none';
+    }
+
+    function initCautionModal() {
+        const overlay = document.getElementById('cautionOverlay');
+        const closeBtn = document.getElementById('cautionModalClose');
+        if (!overlay || !closeBtn) return;
+
+        applyOverlayFallback(overlay);
+        closeBtn.onclick = () => closeCautionModal();
+
+        overlay.onclick = (event) => {
+            if (event.target === overlay) closeCautionModal();
+        };
+
+        document.addEventListener('keydown', (event) => {
+            if (!overlay.classList.contains('is-open')) return;
+            if (event.key === 'Escape' || event.key === 'Enter') {
+                event.preventDefault();
+                closeCautionModal();
+            }
+        });
+    }
+
     function requestDeleteRack(button) {
         const rackBox = button?.closest('.rack-box');
         if (!rackBox) return;
@@ -566,6 +606,7 @@ const TARGET_OVER_PCT = 100;
     window.onload = () => {
         initDeleteConfirmModal();
         initHelpModal();
+        initCautionModal();
         window.addEventListener('resize', refreshRarityOptionLabels);
         const saved = JSON.parse(localStorage.getItem(RACK_STORAGE_KEY));
         const targetInput = document.getElementById('targetPowerValue');
