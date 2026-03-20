@@ -64,11 +64,33 @@ const TARGET_OVER_PCT = 100;
 
     let pendingConfirmAction = null;
 
+    function applyOverlayFallback(overlay) {
+        if (!overlay) return;
+        const modal = overlay.querySelector('.confirm-modal');
+
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.zIndex = '10001';
+        overlay.style.background = 'rgba(10, 12, 16, 0.84)';
+        overlay.style.padding = '18px';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+
+        if (!overlay.classList.contains('is-open')) {
+            overlay.style.display = 'none';
+        }
+
+        if (!modal) return;
+        modal.style.width = '100%';
+        modal.style.maxWidth = '520px';
+    }
+
     function closeDeleteConfirm() {
         const overlay = document.getElementById('deleteConfirmOverlay');
         if (!overlay) return;
         overlay.classList.remove('is-open');
         overlay.setAttribute('aria-hidden', 'true');
+        overlay.style.display = 'none';
         pendingConfirmAction = null;
     }
 
@@ -86,8 +108,10 @@ const TARGET_OVER_PCT = 100;
         messageEl.textContent = message;
         pendingConfirmAction = onConfirm;
 
+        applyOverlayFallback(overlay);
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
+        overlay.style.display = 'flex';
         if (confirmBtn) confirmBtn.focus();
     }
 
@@ -106,6 +130,8 @@ const TARGET_OVER_PCT = 100;
         const cancelBtn = document.getElementById('deleteConfirmCancel');
         const confirmBtn = document.getElementById('deleteConfirmConfirm');
         if (!overlay || !cancelBtn || !confirmBtn) return;
+
+        applyOverlayFallback(overlay);
 
         cancelBtn.onclick = () => closeDeleteConfirm();
         confirmBtn.onclick = () => confirmDeleteAction();
@@ -131,8 +157,10 @@ const TARGET_OVER_PCT = 100;
         const overlay = document.getElementById('helpOverlay');
         const closeBtn = document.getElementById('helpModalClose');
         if (!overlay) return;
+        applyOverlayFallback(overlay);
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
+        overlay.style.display = 'flex';
         if (closeBtn) closeBtn.focus();
     }
 
@@ -141,12 +169,15 @@ const TARGET_OVER_PCT = 100;
         if (!overlay) return;
         overlay.classList.remove('is-open');
         overlay.setAttribute('aria-hidden', 'true');
+        overlay.style.display = 'none';
     }
 
     function initHelpModal() {
         const overlay = document.getElementById('helpOverlay');
         const closeBtn = document.getElementById('helpModalClose');
         if (!overlay || !closeBtn) return;
+
+        applyOverlayFallback(overlay);
 
         closeBtn.onclick = () => closeHelpModal();
 
