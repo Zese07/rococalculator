@@ -351,6 +351,88 @@ body::before {
     line-height: 2.2;
 }
 
+.target-wrap {
+    margin-top: 14px;
+    border-top: 2px solid #484c58;
+    padding-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.target-label {
+    font-size: 8px;
+    color: #8890a0;
+    letter-spacing: 1px;
+    line-height: 1.8;
+}
+
+.target-input-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.target-input {
+    width: 170px;
+    text-align: center;
+    color: #00d4ff;
+}
+
+.target-unit {
+    width: 110px;
+    text-align: center;
+    color: #00d4ff;
+}
+
+.target-progress {
+    width: 100%;
+    max-width: 520px;
+    height: 14px;
+    margin: 2px auto 0;
+    border: 2px solid #484c58;
+    background: #22252c;
+    overflow: hidden;
+}
+
+.target-progress-fill {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #00d4ff, #10b981);
+    transition: width 0.15s ease;
+}
+
+.target-progress-fill.target-state-safe {
+    background: linear-gradient(90deg, #00d4ff, #10b981);
+}
+
+.target-progress-fill.target-state-near {
+    background: linear-gradient(90deg, #f5a623, #facc15);
+}
+
+.target-progress-fill.target-state-over {
+    background: linear-gradient(90deg, #f43f5e, #ef4444);
+}
+
+.target-line {
+    font-size: 8px;
+    color: #8890a0;
+    letter-spacing: 1px;
+    line-height: 1.8;
+}
+
+.target-line.target-state-safe {
+    color: #10b981;
+}
+
+.target-line.target-state-near {
+    color: #f5a623;
+}
+
+.target-line.target-state-over {
+    color: #f43f5e;
+}
+
 .sync-tag {
     position: absolute;
     top: 8px;
@@ -473,6 +555,17 @@ input:focus,
 select:focus {
     outline: none;
     border-color: #00d4ff;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 input::placeholder {

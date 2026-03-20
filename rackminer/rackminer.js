@@ -1,61 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>RackMiner — RocoCalculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body class="rack-page">
-<div class="container">
-
-    <a class="back-link" href="index.html">← BACK</a>
-
-    <div class="page-title">
-        <span class="brand-roco brand-main-roco">RACK</span><span class="brand-calc brand-main-calc">MINER</span>
-    </div>
-    <div class="breadcrumb">
-        <span class="brand-roco">ROCO</span><span class="brand-calc">CALCULATOR</span>
-    </div>
-
-    <div class="dashboard">
-        <div class="dash-cell">
-            <span class="label-head">MINERS (RAW)</span>
-            <span class="dash-val" id="dMiners">0.000 PH/s</span>
-        </div>
-        <div class="dash-cell divider-cell">
-            <span class="label-head">BONUS POWER</span>
-            <span class="dash-val" id="dBonus">0.000 PH/s</span>
-            <span class="dash-sub" id="dBonusPct">+0.00%</span>
-        </div>
-        <div class="dash-cell divider-cell">
-            <span class="label-head">RACK BOOST</span>
-            <span class="dash-val" id="dRack">0.000 PH/s</span>
-        </div>
-        <div class="total-footer">
-            <span class="label-head">ESTIMATED TOTAL</span>
-            <span class="total-big" id="dTotal">0.000 PH/s</span>
-            <span class="total-note">* Calculated estimate based on your inputs. Actual in-game value may vary slightly due to internal rounding per miner.</span>
-        </div>
-        <span class="sync-tag" id="syncTag">SAVED ✓</span>
-    </div>
-
-    <div id="rackContainer"></div>
-    <button class="btn-add-rack" onclick="addRack(); solve();">+ ADD NEW RACK</button>
-
-    <div class="footer">
-        <span>CREATED BY ZESE07</span>
-        <span class="footer-separator">·</span>
-        <a href="https://github.com/Zese07/rococalculator" target="_blank" rel="noopener">
-            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            GITHUB
-        </a>
-    </div>
-
-</div>
-<script>
-    const RARITY_CLS = { 'I': 'rarity-I', 'II': 'rarity-II', 'III': 'rarity-III', 'IV': 'rarity-IV', 'V': 'rarity-V' };
+﻿const RARITY_CLS = { 'I': 'rarity-I', 'II': 'rarity-II', 'III': 'rarity-III', 'IV': 'rarity-IV', 'V': 'rarity-V' };
+const TARGET_STORAGE_KEY = 'rocoRackMinerTargetPH';
+const TARGET_UNIT_STORAGE_KEY = 'rocoRackMinerTargetUnit';
+const TARGET_NEAR_PCT = 95;
+const TARGET_OVER_PCT = 100;
 
     const UNITS = [
         { label: 'GH/s', val: 0.000001 },
@@ -93,7 +40,7 @@
         div.dataset.num = rackCount;
         div.innerHTML = `
             <div class="rack-header">
-                <span class="rack-title">▣ RACK ${rackCount}</span>
+                <span class="rack-title">[RACK] ${rackCount}</span>
                 <div class="rack-boost-wrap">
                     <input type="number" class="r-bonus" value="${data ? data.bonus : 0}" oninput="solve()">
                     <span>% RACK BOOST</span>
@@ -110,7 +57,7 @@
             <div class="miners-wrap" id="miners_${id}"></div>
             <div class="rack-footer">
                 <button class="btn-add-miner" onclick="addMiner('${id}'); solve();">+ ADD MINER</button>
-                <button class="btn-del-rack" onclick="this.closest('.rack-box').remove(); renumberRacks(); solve();">✕ DELETE RACK</button>
+                <button class="btn-del-rack" onclick="this.closest('.rack-box').remove(); renumberRacks(); solve();">X DELETE RACK</button>
             </div>
         `;
         document.getElementById('rackContainer').appendChild(div);
@@ -125,7 +72,7 @@
         let n = 0;
         document.querySelectorAll('.rack-box').forEach(rack => {
             n++;
-            rack.querySelector('.rack-title').textContent = '▣ RACK ' + n;
+            rack.querySelector('.rack-title').textContent = '[RACK] ' + n;
         });
         rackCount = n;
     }
@@ -142,15 +89,15 @@
                 <select class="m-rarity ${cls}" onchange="updateRarityColor(this); solve()">
                     ${rarityOptions(savedRarity)}
                 </select>
-                <input type="text" class="m-name ${cls}" value="${data ? data.name : ''}" placeholder="name…" oninput="solve()">
+                <input type="text" class="m-name ${cls}" value="${data ? data.name : ''}" placeholder="name..." oninput="solve()">
                 <input type="number" class="m-pow" value="${data ? data.pow : ''}" placeholder="0.000" oninput="solve()">
                 <select class="m-unit" onchange="solve()">
                     ${unitOptions(savedUnit)}
                 </select>
                 <input type="number" class="m-bonus" value="${data ? data.bonus : ''}" placeholder="0.00" oninput="solve()">
-                <button class="del-miner" onclick="this.closest('.miner-wrapper').remove(); solve();">×</button>
+                <button class="del-miner" onclick="this.closest('.miner-wrapper').remove(); solve();">X</button>
             </div>
-            <div class="lock-indicator">⚠ DUPLICATE RARITY — 0% BONUS</div>
+            <div class="lock-indicator">WARNING DUPLICATE RARITY - 0% BONUS</div>
         `;
         container.appendChild(wrapper);
     }
@@ -161,6 +108,64 @@
         if (ph >= 1)       return ph.toFixed(3) + ' PH/s';
         if (ph >= 0.001)   return (ph * 1000).toFixed(3) + ' TH/s';
         return (ph * 1000000).toFixed(3) + ' GH/s';
+    }
+
+    function fmtPHOnly(ph) {
+        const safeVal = Number.isFinite(ph) && ph >= 0 ? ph : 0;
+        return safeVal.toFixed(3) + ' PH/s';
+    }
+
+    function fmtTargetUnitValue(value, unitLabel) {
+        const safeVal = Number.isFinite(value) && value >= 0 ? value : 0;
+        return safeVal.toFixed(3) + ' ' + unitLabel;
+    }
+
+    function updateTargetProgress(totalPH) {
+        const targetInput = document.getElementById('targetPowerValue');
+        const targetUnitSelect = document.getElementById('targetPowerUnit');
+        const targetFill = document.getElementById('targetFill');
+        const targetLine = document.getElementById('targetLine');
+        if (!targetInput || !targetUnitSelect || !targetFill || !targetLine) return;
+
+        const stateClasses = ['target-state-safe', 'target-state-near', 'target-state-over'];
+        function setTargetState(stateClass) {
+            targetLine.classList.remove(...stateClasses);
+            targetFill.classList.remove(...stateClasses);
+            targetLine.classList.add(stateClass);
+            targetFill.classList.add(stateClass);
+        }
+
+        const targetValue = Math.max(parseFloat(targetInput.value) || 0, 0);
+        const targetUnit = Math.max(parseFloat(targetUnitSelect.value) || 1, 1);
+        const targetUnitLabel = targetUnitSelect.options[targetUnitSelect.selectedIndex]?.text || 'PH/s';
+        const targetPH = targetValue * targetUnit;
+        const safeTotalPH = Math.max(totalPH || 0, 0);
+
+        if (targetPH <= 0) {
+            targetFill.style.width = '0%';
+            setTargetState('target-state-safe');
+            targetLine.innerText = 'ESTIMATED ' + fmtPHOnly(safeTotalPH) + ' / TARGET ' + fmtTargetUnitValue(0, targetUnitLabel) + ' (0.00%)';
+            return;
+        }
+
+        const rawPct = (safeTotalPH / targetPH) * 100;
+        const barPct = Math.max(0, Math.min(rawPct, 100));
+        targetFill.style.width = barPct.toFixed(2) + '%';
+
+        if (rawPct >= TARGET_OVER_PCT) {
+            setTargetState('target-state-over');
+            targetLine.innerText = 'WARNING TARGET REACHED/OVER: ' + fmtPHOnly(safeTotalPH) + ' / ' + fmtTargetUnitValue(targetValue, targetUnitLabel) + ' (' + rawPct.toFixed(2) + '%)';
+            return;
+        }
+
+        if (rawPct >= TARGET_NEAR_PCT) {
+            setTargetState('target-state-near');
+            targetLine.innerText = 'CAUTION NEAR TARGET: ' + fmtPHOnly(safeTotalPH) + ' / ' + fmtTargetUnitValue(targetValue, targetUnitLabel) + ' (' + rawPct.toFixed(2) + '%)';
+            return;
+        }
+
+        setTargetState('target-state-safe');
+        targetLine.innerText = 'ESTIMATED ' + fmtPHOnly(safeTotalPH) + ' / TARGET ' + fmtTargetUnitValue(targetValue, targetUnitLabel) + ' (' + rawPct.toFixed(2) + '%)';
     }
 
     function solve() {
@@ -209,6 +214,16 @@
         document.getElementById('dBonus').innerText = fmt(bonusValPH);
         document.getElementById('dBonusPct').innerText = '+' + (totalUniqueBonusPct * 100).toFixed(2) + '%';
         document.getElementById('dTotal').innerText = fmt(total);
+        updateTargetProgress(total);
+
+        const targetInput = document.getElementById('targetPowerValue');
+        const targetUnitSelect = document.getElementById('targetPowerUnit');
+        if (targetInput && targetUnitSelect) {
+            const targetValue = Math.max(parseFloat(targetInput.value) || 0, 0);
+            const targetUnit = Math.max(parseFloat(targetUnitSelect.value) || 1, 1);
+            localStorage.setItem(TARGET_STORAGE_KEY, String(targetValue));
+            localStorage.setItem(TARGET_UNIT_STORAGE_KEY, String(targetUnit));
+        }
 
         localStorage.setItem('rocoRackMiner', JSON.stringify(exportData));
         const tag = document.getElementById('syncTag');
@@ -218,6 +233,18 @@
 
     window.onload = () => {
         const saved = JSON.parse(localStorage.getItem('rocoRackMiner'));
+        const targetInput = document.getElementById('targetPowerValue');
+        const targetUnitSelect = document.getElementById('targetPowerUnit');
+        const savedTarget = parseFloat(localStorage.getItem(TARGET_STORAGE_KEY));
+        if (targetInput && Number.isFinite(savedTarget) && savedTarget >= 0) {
+            targetInput.value = savedTarget;
+        }
+
+        const savedTargetUnit = parseFloat(localStorage.getItem(TARGET_UNIT_STORAGE_KEY));
+        if (targetUnitSelect && Number.isFinite(savedTargetUnit) && savedTargetUnit > 0) {
+            targetUnitSelect.value = String(savedTargetUnit);
+        }
+
         if (saved && saved.length > 0) {
             saved.forEach(r => addRack(r));
         } else {
@@ -225,6 +252,3 @@
         }
         solve();
     };
-</script>
-</body>
-</html>

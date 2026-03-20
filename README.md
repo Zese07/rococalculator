@@ -6,7 +6,7 @@
 
 RocoCalculator is a simple tool for calculating power in RollerCoin.
 
-## What It Does
+## What You Can Do
 
-- Lets you estimate your RollerCoin rack mining power.
+- Estimate your RollerCoin total rack mining power.
 - You can add racks and miners, set power units and bonus %, and see an estimated total output.

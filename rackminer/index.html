@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RackMiner - RocoCalculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body class="rack-page">
+<div class="container">
+
+    <a class="back-link" href="../"><- BACK</a>
+
+    <div class="page-title">
+        <span class="brand-roco brand-main-roco">RACK</span><span class="brand-calc brand-main-calc">MINER</span>
+    </div>
+    <div class="breadcrumb">
+        <span class="brand-roco">ROCO</span><span class="brand-calc">CALCULATOR</span>
+    </div>
+
+    <div class="dashboard">
+        <div class="dash-cell">
+            <span class="label-head">MINERS (RAW)</span>
+            <span class="dash-val" id="dMiners">0.000 PH/s</span>
+        </div>
+        <div class="dash-cell divider-cell">
+            <span class="label-head">BONUS POWER</span>
+            <span class="dash-val" id="dBonus">0.000 PH/s</span>
+            <span class="dash-sub" id="dBonusPct">+0.00%</span>
+        </div>
+        <div class="dash-cell divider-cell">
+            <span class="label-head">RACK BOOST</span>
+            <span class="dash-val" id="dRack">0.000 PH/s</span>
+        </div>
+        <div class="total-footer">
+            <span class="label-head">ESTIMATED TOTAL</span>
+            <span class="total-big" id="dTotal">0.000 PH/s</span>
+            <span class="total-note">* Note: Proceed with caution.<br>Actual in-game value may vary slightly compare to the estimated value.<br></span>
+            <div class="target-wrap">
+                <label class="target-label" for="targetPowerValue">MAX POWER TARGET</label>
+                <div class="target-input-row">
+                    <input type="number" id="targetPowerValue" class="target-input" min="0" step="0.001" value="0" oninput="solve()">
+                    <select id="targetPowerUnit" class="target-unit" onchange="solve()">
+                        <option value="1" selected>PH/s</option>
+                        <option value="1000">EH/s</option>
+                        <option value="1000000">ZH/s</option>
+                    </select>
+                </div>
+                <div class="target-progress">
+                    <div class="target-progress-fill" id="targetFill"></div>
+                </div>
+                <span class="target-line" id="targetLine">ESTIMATED 0.000 PH/s / TARGET 0.000 PH/s (0.00%)</span>
+            </div>
+        </div>
+        <span class="sync-tag" id="syncTag">SAVED OK</span>
+    </div>
+
+    <div id="rackContainer"></div>
+    <button class="btn-add-rack" onclick="addRack(); solve();">+ ADD NEW RACK</button>
+
+    <div class="footer">
+        <span>CREATED BY ZESE07</span>
+        <span class="footer-separator">|</span>
+        <a href="https://github.com/Zese07/rococalculator" target="_blank" rel="noopener">
+            <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GITHUB
+        </a>
+    </div>
+
+</div>
+<script src="./rackminer.js"></script>
+</body>
+</html>
