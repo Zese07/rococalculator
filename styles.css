@@ -1003,12 +1003,17 @@ input::placeholder {
         padding: 10px 0;
     }
 
+    .miner-row .m-rarity,
     .miner-row .m-name,
     .miner-row .m-pow,
     .miner-row .m-unit,
     .miner-row .m-bonus,
     .miner-row .del-miner {
         grid-column: span 2;
+    }
+
+    .miner-row .m-rarity {
+        text-align: center;
     }
 
     .miner-row .del-miner {

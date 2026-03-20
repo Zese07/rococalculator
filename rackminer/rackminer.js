@@ -18,10 +18,26 @@ const TARGET_OVER_PCT = 100;
         return UNITS.map(u => `<option value="${u.val}" ${saved == u.val ? 'selected' : ''}>${u.label}</option>`).join('');
     }
 
-    function rarityOptions(saved) {
-        return ['I','II','III','IV','V'].map(k =>
-            `<option value="${k}" ${saved == k ? 'selected' : ''}>${k}</option>`
-        ).join('');
+    function isCompactMobileView() {
+        return typeof window !== 'undefined' &&
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(max-width: 700px)').matches;
+    }
+
+    function rarityOptions(saved, includeRarityLabel = false) {
+        return ['I','II','III','IV','V'].map(k => {
+            const label = includeRarityLabel ? `${k} (Rarity)` : k;
+            return `<option value="${k}" ${saved == k ? 'selected' : ''}>${label}</option>`;
+        }).join('');
+    }
+
+    function refreshRarityOptionLabels() {
+        const includeRarityLabel = isCompactMobileView();
+        document.querySelectorAll('.m-rarity').forEach(select => {
+            const selected = select.value || 'I';
+            select.innerHTML = rarityOptions(selected, includeRarityLabel);
+            select.value = selected;
+        });
     }
 
     function updateRarityColor(select) {
@@ -390,7 +406,7 @@ const TARGET_OVER_PCT = 100;
         wrapper.innerHTML = `
             <div class="miner-row">
                 <select class="m-rarity ${cls}" onchange="updateRarityColor(this); solve()">
-                    ${rarityOptions(savedRarity)}
+                    ${rarityOptions(savedRarity, isCompactMobileView())}
                 </select>
                 <input type="text" class="m-name ${cls}" value="${data ? data.name : ''}" placeholder="Name..." oninput="solve()">
                 <input type="number" class="m-pow" value="${data ? data.pow : ''}" placeholder="0.00 (Power)" oninput="solve()">
@@ -550,6 +566,7 @@ const TARGET_OVER_PCT = 100;
     window.onload = () => {
         initDeleteConfirmModal();
         initHelpModal();
+        window.addEventListener('resize', refreshRarityOptionLabels);
         const saved = JSON.parse(localStorage.getItem(RACK_STORAGE_KEY));
         const targetInput = document.getElementById('targetPowerValue');
         const targetUnitSelect = document.getElementById('targetPowerUnit');
@@ -573,5 +590,6 @@ const TARGET_OVER_PCT = 100;
         } else {
             addRack();
         }
+        refreshRarityOptionLabels();
         solve();
     };
