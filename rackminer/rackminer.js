@@ -42,17 +42,24 @@ const TARGET_OVER_PCT = 100;
         return safeSlots * 0.012;
     }
 
+    function roundValue(value, decimals = 2) {
+        const num = parseFloat(value);
+        if (!Number.isFinite(num)) return 0;
+        const factor = 10 ** decimals;
+        return Math.round((num + Number.EPSILON) * factor) / factor;
+    }
+
     function sanitizeMiner(miner) {
         const tier = ['I', 'II', 'III', 'IV', 'V'].includes(miner?.tier) ? miner.tier : 'I';
         const name = typeof miner?.name === 'string' ? miner.name : '';
         const pow = Math.max(parseFloat(miner?.pow) || 0, 0);
         const unit = getValidUnitVal(miner?.unit);
-        const bonus = Math.max(parseFloat(miner?.bonus) || 0, 0);
+        const bonus = roundValue(Math.max(parseFloat(miner?.bonus) || 0, 0), 2);
         return { tier, name, pow, unit, bonus };
     }
 
     function sanitizeRack(rack) {
-        const bonus = Math.max(parseFloat(rack?.bonus) || 0, 0);
+        const bonus = roundValue(Math.max(parseFloat(rack?.bonus) || 0, 0), 2);
         const miners = Array.isArray(rack?.miners) ? rack.miners.map(sanitizeMiner) : [];
         return { bonus, miners };
     }
@@ -338,7 +345,7 @@ const TARGET_OVER_PCT = 100;
             <div class="rack-header">
                 <span class="rack-title">[RACK] ${rackCount}</span>
                 <div class="rack-boost-wrap">
-                    <input type="number" class="r-bonus" value="${data ? data.bonus : 0}" oninput="solve()">
+                    <input type="number" class="r-bonus" value="${data ? roundValue(data.bonus, 2) : 0}" oninput="solve()">
                     <span>% RACK BONUS</span>
                 </div>
             </div>
@@ -390,7 +397,7 @@ const TARGET_OVER_PCT = 100;
                 <select class="m-unit" onchange="solve()">
                     ${unitOptions(savedUnit)}
                 </select>
-                <input type="number" class="m-bonus" value="${data ? data.bonus : ''}" placeholder="0.00 (Bonus%)" oninput="solve()">
+                <input type="number" class="m-bonus" value="${data ? roundValue(data.bonus, 2) : ''}" placeholder="0.00 (Bonus%)" oninput="solve()">
                 <button class="del-miner" onclick="requestDeleteMiner(this)">X</button>
             </div>
             <div class="lock-indicator">WARNING DUPLICATE RARITY - 0% BONUS</div>
@@ -505,12 +512,12 @@ const TARGET_OVER_PCT = 100;
                 } else {
                     totalUniqueBonusPct += b;
                 }
-                minersArray.push({ tier, name: row.querySelector('.m-name').value, pow: p, unit: u, bonus: b * 100 });
+                minersArray.push({ tier, name: row.querySelector('.m-name').value, pow: p, unit: u, bonus: roundValue(b * 100, 2) });
             });
 
             totalRawPH += rackRawPH;
             totalRackBonusPH += rackRawPH * rBoost;
-            exportData.push({ bonus: rBoost * 100, miners: minersArray });
+            exportData.push({ bonus: roundValue(rBoost * 100, 2), miners: minersArray });
         });
 
         const rackBonusInBonusFactor = getRackBonusInBonusFactor(totalMinerSlots);
