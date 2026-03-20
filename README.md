@@ -5,6 +5,7 @@
 </p>
 
 RocoCalculator is a simple tool for calculating power in RollerCoin.
+Website: https://zese07.github.io/rococalculator/
 
 ## What You Can Do
 

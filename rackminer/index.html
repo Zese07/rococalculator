@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RackMiner - RocoCalculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -10,7 +11,10 @@
 <body class="rack-page">
 <div class="container">
 
-    <a class="back-link" href="../"><- BACK</a>
+    <div class="top-actions">
+        <a class="back-link" href="../"><- BACK</a>
+        <button class="help-trigger" type="button" onclick="openHelpModal()">HOW TO USE?</button>
+    </div>
 
     <div class="page-title">
         <span class="brand-roco brand-main-roco">RACK</span><span class="brand-calc brand-main-calc">MINER</span>
@@ -30,7 +34,7 @@
             <span class="dash-sub" id="dBonusPct">+0.00%</span>
         </div>
         <div class="dash-cell divider-cell">
-            <span class="label-head">RACK BOOST</span>
+            <span class="label-head">RACK BONUS</span>
             <span class="dash-val" id="dRack">0.000 PH/s</span>
         </div>
         <div class="total-footer">
@@ -58,6 +62,41 @@
 
     <div id="rackContainer"></div>
     <button class="btn-add-rack" onclick="addRack(); solve();">+ ADD NEW RACK</button>
+    <div class="io-actions">
+        <button class="btn-io btn-export" onclick="exportRackMinerData()">EXPORT DATA</button>
+        <button class="btn-io btn-import" onclick="triggerImportRackMinerData()">IMPORT DATA</button>
+        <input id="importRackMinerFile" type="file" accept="application/json,.json" hidden onchange="importRackMinerData(event)">
+    </div>
+
+    <div id="deleteConfirmOverlay" class="confirm-overlay" aria-hidden="true">
+        <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle" aria-describedby="deleteConfirmMessage">
+            <div class="confirm-head">
+                <span class="confirm-title" id="deleteConfirmTitle">DELETE ITEM?</span>
+            </div>
+            <p class="confirm-message" id="deleteConfirmMessage">This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button id="deleteConfirmCancel" class="confirm-btn confirm-cancel" type="button">CANCEL</button>
+                <button id="deleteConfirmConfirm" class="confirm-btn confirm-delete" type="button">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="helpOverlay" class="confirm-overlay" aria-hidden="true">
+        <div class="confirm-modal help-modal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" aria-describedby="helpModalBody">
+            <div class="confirm-head">
+                <span class="confirm-title" id="helpModalTitle">HOW TO USE RACKMINER</span>
+            </div>
+            <div class="confirm-message help-message" id="helpModalBody">
+                <p>1. Add your racks and set each RACK BONUS.</p>
+                <p>2. Add miners and enter POWER, UNIT, and BONUS.</p>
+                <p>3. Set MAX POWER TARGET to track safe limits.</p>
+                <p>4. Things get saved locally but you can use EXPORT/IMPORT to back up or transfer your setup.</p>
+            </div>
+            <div class="confirm-actions">
+                <button id="helpModalClose" class="confirm-btn help-close" type="button">GOT IT</button>
+            </div>
+        </div>
+    </div>
 
     <div class="footer">
         <span>CREATED BY ZESE07</span>
